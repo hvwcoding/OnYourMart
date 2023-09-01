@@ -72,9 +72,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def soft_delete(self):
-        self.deleted_at = datetime.datetime.now()
+        self.deleted_at = timezone.now()
         self.is_active = False
         self.save()
+
+        # Update the listings: Keep only "Settled" listings
+        self.listing_set.exclude(status__name="Settled").delete()
 
     def __str__(self):
         return self.email

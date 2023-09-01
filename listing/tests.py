@@ -3,6 +3,7 @@ from functools import wraps
 from django.db.models.signals import post_save, post_delete
 
 from metrics.signals import listing_changes
+from user.models import City
 from .models import CustomUser, Listing, ListingType, Category, Condition, MeetupPoint, Status
 from .base import BaseTest
 
@@ -386,11 +387,11 @@ class ListingMetricsCRUDTestCase(ListingBaseMetricsTestCase):
 
         self.refresh_metrics()
 
-        self.assert_user_metrics(self.user_metrics, 2, 250)
+        self.assert_user_metrics(self.user_metrics, 1, 200)
         self.assert_user_metrics(self.another_user_metrics, 2, 400)
-        self.assert_city_metrics(self.city_metrics, 2, 250)
+        self.assert_city_metrics(self.city_metrics, 1, 200)
         self.assert_city_metrics(self.another_city_metrics, 2, 400)
-        self.assert_platform_metrics(self.platform_metrics, 4, 650)
+        self.assert_platform_metrics(self.platform_metrics, 3, 600)
 
     def test_update_listing_updates_metrics_with_listing_status_active_price_change_for_both_users_in_two_cities(self):
         """Test that updating a listing for the first user updates the metrics."""
@@ -433,7 +434,7 @@ class ListingMetricsCRUDTestCase(ListingBaseMetricsTestCase):
         self.assert_city_metrics(self.another_city_metrics,  1, 200)
         self.assert_platform_metrics(self.platform_metrics, 0, 0, 0, 0, 2, 300)
 
-    def test_delete_update_metrics_for_both_users(self):
+    def test_delete_listing_update_metrics_for_both_users(self):
         """Test that deleting a listing for the first user; updates the metrics."""
         user_listing = Listing.objects.get(user=self.user)
         user_listing.delete()
@@ -448,12 +449,14 @@ class ListingMetricsCRUDTestCase(ListingBaseMetricsTestCase):
         self.assert_city_metrics(self.another_city_metrics, 0, 0)
         self.assert_platform_metrics(self.platform_metrics, 0, 0)
 
-    def test_metrics_update_on_user_or_city_deletion(self):
-        self.user.delete()
+    def test_metrics_update_on_user_soft_deletion(self):
+        self.user.soft_delete()
         self.refresh_metrics()
         self.assert_user_metrics(self.user_metrics, 0, 0)
         self.assert_city_metrics(self.city_metrics, 0,  0)
         self.assert_platform_metrics(self.platform_metrics, 1,  50)
+        self.assertFalse(self.user.is_active)
+        self.assertIsNotNone(self.user.deleted_at)
 
     def test_migrate_listing_to_another_city_updates_metrics(self):
         user_listing = Listing.objects.get(user=self.user)
@@ -463,8 +466,10 @@ class ListingMetricsCRUDTestCase(ListingBaseMetricsTestCase):
         self.refresh_metrics()
 
         self.assert_user_metrics(self.user_metrics, 1, 50)
-        self.assert_city_metrics(self.another_city_metrics, 2, 100)
+        self.assert_city_metrics(self.another_city_metrics, 1, 50)
         self.assert_platform_metrics(self.platform_metrics, 2, 100)
+        # Only university's city will be counted, due to the ER relationship
+        # Also, the app does not support multiple universities for a user (assumption made)
 
 
 class ConcurrencyTestCase(ListingBaseMetricsTestCase):
