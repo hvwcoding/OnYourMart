@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="container mt-4">
+        <form class="mb-3" action="{% url 'search_listing' %}" method="get" id="mainForm">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-10">
+                    {% if request.GET.query %}
+                        <h2>Search Results for "{{ request.GET.query }}"</h2>
+                    {% else %}
+                        <h2>Active Listing</h2>
+                    {% endif %}
+                </div>
+
+                <!-- Sorting -->
+                <div class="col-lg-2 ms-auto">
+                    <div class="form-group">
+
+                        <!-- Preserve other filter settings when sorting -->
+                        <input type="hidden" name="type" value="{{ request.GET.type }}">
+                        <input type="hidden" name="city" value="{{ request.GET.city }}">
+                        <input type="hidden" name="condition" value="{{ request.GET.condition }}">
+                        <input type="hidden" name="meetup" value="{{ request.GET.meetup }}">
+                        <!-- Actual sorting dropdown -->
+                        <label for="sort"></label>
+                        <select name="sort" id="sort" class="form-control" onchange="updateSortAndSubmit();">
+                            <option value="" {% if not request.GET.sort %}selected{% endif %}>Sort by: default</option>
+                            {% for option in sort_options %}
+                                <option value="{{ option.value }}"
+                                        {% if request.GET.sort == option.value %}selected{% endif %}>{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Display Filter Form -->
+            <div class="row">
+                <!-- Type -->
+                <div class="col-lg-2 form-group">
+                    <label for="type">Type</label>
+                    <select name="type" id="type" class="form-control">
+                        <option value="" selected disabled>Choose Type...</option>
+                        <option value="Sale" {% if request.GET.type == "Sale" %}selected{% endif %}>Sale</option>
+                        <option value="Wanted" {% if request.GET.type == "Wanted" %}selected{% endif %}>Wanted</option>
+                    </select>
+                </div>
+
+                <!-- City -->
+                <div class="col-lg-2 form-group">
+                    <label for="city">City</label>
+                    <select name="city" id="city" class="form-control">
+                        <option value="" selected disabled>Choose City...</option>
+                        {% for city in cities %}
+                            <option value="{{ city.id }}"
+                                    {% if request.GET.city == city.id|stringformat:"s" %}selected{% endif %}>{{ city.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Condition -->
+                <div class="col-lg-2 form-group">
+                    <label for="condition">Condition</label>
+                    <select name="condition" id="condition" class="form-control">
+                        <option value="" selected disabled>Choose Condition...</option>
+                        <option value="New" {% if request.GET.condition == "New" %}selected{% endif %}>New</option>
+                        <option value="Used" {% if request.GET.condition == "Used" %}selected{% endif %}>Used</option>
+                    </select>
+                </div>
+
+                <!-- Meetup -->
+                <div class="col-lg-2 form-group">
+                    <label for="meetup">Meetup</label>
+                    <select name="meetup" id="meetup" class="form-control">
+                        <option value="" selected disabled>Choose Meetup...</option>
+                        <option value="1" {% if request.GET.meetup == "1" %}selected{% endif %}>Available</option>
+                    </select>
+                </div>
+
+                <!-- Apply and Clear Buttons -->
+                <div class="col-lg-4 form-group d-flex justify-content-end align-items-end">
+                    <button class="btn btn-primary mr-2" type="submit">Apply Filters</button>
+                    <button class="btn btn-secondary" type="button" onclick="clearFilters()">Clear Filters</button>
+                </div>
+            </div>
+        </form>
+
+
+        <!-- Display Listings -->
+        {% if listings %}
+            <div class="row p-3">
+                {% for listing in listings %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="container-fluid">
+                                <div class="row justify-content-center">
+                                    {% with image=listing.images.first %}
+                                        {% if image and image.image %}
+                                            <div class="first-photo-item-overview col-sm-4 col-4">
+                                                <img src="{{ image.image_thumbnail.url }}" alt="Listing thumbnail"
+                                                     class="img-fluid rounded" loading="lazy">
+                                            </div>
+                                        {% else %}
+                                            <div class="first-photo-item-overview col-sm-4 col-4">
+                                                <i class="fas fa-image fa-3x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+
+
+                            <div class="card-header {% if listing.listing_type.name == 'Sale' %}header-sale{% elif listing.listing_type.name == 'Wanted' %}header-wanted{% endif %}">
+                                {{ listing.listing_type }}
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title font-weight-bold custom-price">£{{ listing.price }}</h5>
+
+                                <!-- City -->
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <i class="fas fa-building text-muted"></i>
+                                        City
+                                    </div>
+                                    <div class="col-6">
+                                        {{ listing.user.city }}
+                                    </div>
+                                </div>
+
+                                <!-- Condition -->
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <i class="fas fa-tag text-muted"></i>
+                                        Condition
+                                    </div>
+                                    <div class="col-6">
+                                        {{ listing.condition }}
+                                    </div>
+                                </div>
+
+                                <!-- Meetup -->
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <i class="fas fa-box text-muted"></i>
+                                        Meetup
+                                    </div>
+                                    <div class="col-6">
+                                        {% if listing.meetup_available %}
+                                            <span class="badge badge-success"><i
+                                                    class="fas fa-check"></i> Available</span>
+                                        {% else %}
+                                            Unavailable
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Move Out Date -->
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <i class="fas fa-calendar-alt text-muted"></i>
+                                        Move Out Date
+                                    </div>
+                                    <div class="col-6">
+                                        {{ listing.user.move_out_date|date:"d/m/Y" }}
+                                    </div>
+                                </div>
+                                <!-- Posted -->
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <i class="fas fa-calendar-alt text-muted"></i>
+                                        Posted
+                                    </div>
+                                    <div class="col-6">
+                                        {{ listing.created_date|date:"d/m/Y" }}
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-center align-items-center mt-3">
+                                    <a href="{% url 'listing_details' listing.pk %}" class="btn btn-primary">View
+                                        Listing</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% if no_results %}
+                <div class="alert alert-info">No results found. Try another keyword.</div>
+            {% endif %}
+        {% endif %}
+
+
+
+        <script>
+            function updateSortAndSubmit() {
+                document.getElementById('mainForm').submit();
+            }
+
+            <!-- Clear Filters but keep the sorting option remained -->
+            function clearFilters() {
+                const currentSortOption = document.getElementById("sort").value;
+                const url = new URL(window.location);
+                url.searchParams.set('type', '');
+                url.searchParams.set('city', '');
+                url.searchParams.set('condition', '');
+                url.searchParams.set('meetup', '');
+                url.searchParams.set('sort', currentSortOption);
+
+                window.location.href = url.toString();
+            }
+
+        </script>
+    </div>
+{% endblock %}

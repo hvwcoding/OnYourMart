@@ -1,0 +1,237 @@
+{% load django_bootstrap5 %}
+{% load django_bootstrap5 %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>On Your Mart, On Your Mark</title>
+
+    <!-- Google Fonts API -->
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Link to page favicon.png to display in the location bar -->
+    <link rel="icon" href="{% static 'image/favicon.png' %}">
+
+    <!-- Font Awesome CSS -->
+    <link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Jquery JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- ECharts JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+
+</head>
+<body>
+<div class="wrapper">
+    <!-- Common header or navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light custom-nav">
+        <div class="container-fluid">
+
+            <!-- Navbar Brand -->
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'image/logo.png' %}" alt="logo" width="79" height="60">
+            </a>
+
+            <!-- Centered Search Bar and Button -->
+            <div class="search-bar">
+                <form class="input-group" action="{% url 'search_listing' %}" method="get">
+                    <input class="form-control" type="search" placeholder="Search for listings..."
+                           aria-label="Search" name="query" value="{{ request.GET.query }}">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+
+            <!-- Right-aligned Navigation Options -->
+            <div class="ml-auto">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle btn edu-function" href="#" id="recycleNowDropdown"
+                           data-bs-toggle="dropdown">
+                            Recycle Now
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="recycleNowDropdown">
+                            <a class="dropdown-item" href="{% url 'redirect_recycle_an_item' %}" target="_blank">Recycle
+                                an Item</a>
+                            <a class="dropdown-item" href="{% url 'redirect_recycling_locator' %}" target="_blank">Recycling
+                                Locator</a>
+                            <a class="dropdown-item" href="{% url 'redirect_how_to_recycle' %}" target="_blank">How to
+                                Recycle</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'kpi_overview' %}">
+                            <button class="btn edu-function">Metrics Overview</button>
+                        </a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                        <!-- Create Listing -->
+                        <li>
+                            <a class="nav-link" href="{% url 'create_listing' %}">
+                                <button class="btn btn-eye-catching">
+                                    <i class="fa-solid fa-upload"></i>
+                                    Listing
+                                </button>
+                            </a>
+                        </li>
+                        <!-- Combined Chat with Notification Badge -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'chatroom_without_id' %}">
+                                <i class="fa-regular fa-envelope"></i>
+                                <span class="notification-badge" id="message-notification-badge">0</span>
+                            </a>
+                        </li>
+
+                        <!-- User Profile Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="hello-btn nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                               data-bs-toggle="dropdown">
+                                {% if user.avatar %}
+                                    <!-- Display user avatar if exists -->
+                                    <img src="{{ user.avatar.url }}" alt="avatar" class="avatar-img small-avatar">
+                                {% else %}
+                                    <!-- Display default icon if no avatar -->
+                                    <i class="fas fa-user-circle" style="font-size: 33px;"></i>
+                                {% endif %}
+                            </a>
+
+                            <!-- Dropdown Menu Items -->
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="{% url 'kpi_user' %}"> Listing Insight</a>
+                                {#                                <a class="dropdown-item" href="{% url 'listing_dashboard' %}">Listings</a>#}
+                                <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                                <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                            </div>
+                        </li>
+                    {% else %}
+                        <!-- Unauthenticated User Options -->
+                        <li>
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <button class="btn btn-eye-catching">
+                                    <i class="fas fa-upload"></i> Listing
+                                </button>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <button class="btn btn-primary">Register | Login</button>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Categories Dropdown -->
+    <nav class="navbar navbar-expand-lg navbar-light custom-dropdown-menu">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#categoriesNavbar"
+                    aria-controls="categoriesNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                Categories
+            </button>
+            <div class="collapse navbar-collapse" id="categoriesNavbar">
+                <ul class="navbar-nav">
+                    {% for category in categories %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink_{{ category.name }}"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ category.name }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink_{{ category.name }}">
+                                {% for subcategory in category.category_set.all %}
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item" href="#">{{ subcategory.name }}</a>
+                                        <ul class="dropdown-menu">
+                                            {% for subsubcategory in subcategory.category_set.all %}
+                                                <li><a class="dropdown-item" href="#">{{ subsubcategory.name }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Main content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <hr>
+        <p class="text-center"> | University of Birmingham | &copy; On Your Mart | 2022-2023 M.Sc. Project |</p>
+    </footer>
+</div>
+<script>
+    function showDropDown() {
+        // Show the dropdown on hover
+        $(".hello-btn").hover(function () {
+            $(this).dropdown('toggle');
+        });
+    }
+
+    function fetchUnreadMessagesCount() {
+        const url = '/chatroom/unread-messages-count/';
+        console.log("Fetching from:", url);
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const badge = document.getElementById('message-notification-badge');
+                badge.textContent = data.unread_count;
+                badge.setAttribute('data-count', data.unread_count);
+            })
+            .catch(e => {
+                console.log('Fetch failed', e);
+            });
+    }
+
+    // Now, call this function
+    fetchUnreadMessagesCount();
+    setInterval(fetchUnreadMessagesCount, 10000);  // Check every 10 seconds
+
+    function markChatRoomAsRead(roomIdentifier) {
+        const url = `/mark_chat_room_messages_as_read/${roomIdentifier}/`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                fetchUnreadMessagesCount();  // Fetch updated unread count
+            })
+            .catch(e => {
+                console.log('Fetch failed', e);
+            });
+    }
+
+</script>
+</body>
+</html>

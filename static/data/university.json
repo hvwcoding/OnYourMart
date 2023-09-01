@@ -1,0 +1,666 @@
+[
+  {
+    "University": "Abertay University",
+    "Town": "Dundee"
+  },
+  {
+    "University": "Aberystwyth University",
+    "Town": "Aberystwyth"
+  },
+  {
+    "University": "Anglia Ruskin University",
+    "Town": "Cambridge"
+  },
+  {
+    "University": "Arts University Bournemouth",
+    "Town": "Poole"
+  },
+  {
+    "University": "Arts University Plymouth",
+    "Town": "Plymouth"
+  },
+  {
+    "University": "Aston University",
+    "Town": "Birmingham"
+  },
+  {
+    "University": "Bangor University",
+    "Town": "Bangor"
+  },
+  {
+    "University": "Bath Spa University",
+    "Town": "Bath"
+  },
+  {
+    "University": "Birkbeck, University of London",
+    "Town": "London"
+  },
+  {
+    "University": "Birmingham City University",
+    "Town": "Birmingham"
+  },
+  {
+    "University": "Bishop Grosseteste University",
+    "Town": "Lincoln"
+  },
+  {
+    "University": "Bournemouth University",
+    "Town": "Poole"
+  },
+  {
+    "University": "BPP University",
+    "Town": "London"
+  },
+  {
+    "University": "Brunel University London",
+    "Town": "Uxbridge"
+  },
+  {
+    "University": "Buckinghamshire New University",
+    "Town": "High Wycombe"
+  },
+  {
+    "University": "Canterbury Christ Church University",
+    "Town": "Canterbury"
+  },
+  {
+    "University": "Cardiff Metropolitan University",
+    "Town": "Cardiff"
+  },
+  {
+    "University": "Cardiff University",
+    "Town": "Cardiff"
+  },
+  {
+    "University": "City, University of London",
+    "Town": "London"
+  },
+  {
+    "University": "Coventry University",
+    "Town": "Coventry"
+  },
+  {
+    "University": "Cranfield University",
+    "Town": "Cranfield"
+  },
+  {
+    "University": "De Montfort University",
+    "Town": "Leicester"
+  },
+  {
+    "University": "Durham University",
+    "Town": "Durham"
+  },
+  {
+    "University": "Edge Hill University",
+    "Town": "Ormskirk"
+  },
+  {
+    "University": "Edinburgh Napier University",
+    "Town": "Edinburgh"
+  },
+  {
+    "University": "European School of Economics",
+    "Town": "London"
+  },
+  {
+    "University": "Falmouth University",
+    "Town": "Falmouth"
+  },
+  {
+    "University": "Glasgow Caledonian University",
+    "Town": "Glasgow"
+  },
+  {
+    "University": "Goldsmiths, University of London",
+    "Town": "London"
+  },
+  {
+    "University": "Guildhall School of Music and Drama",
+    "Town": "London"
+  },
+  {
+    "University": "Harper Adams University",
+    "Town": "Newport"
+  },
+  {
+    "University": "Hartpury University and Hartpury College",
+    "Town": "Gloucester"
+  },
+  {
+    "University": "Heriot-Watt University",
+    "Town": "Edinburgh"
+  },
+  {
+    "University": "Imperial College London",
+    "Town": "London"
+  },
+  {
+    "University": "Keele University",
+    "Town": "Keele"
+  },
+  {
+    "University": "King's College London",
+    "Town": "London"
+  },
+  {
+    "University": "Kingston University",
+    "Town": "Kingston upon Thames"
+  },
+  {
+    "University": "Lancaster University",
+    "Town": "Lancaster"
+  },
+  {
+    "University": "Leeds Arts University",
+    "Town": "Leeds"
+  },
+  {
+    "University": "Leeds Beckett University",
+    "Town": "Leeds"
+  },
+  {
+    "University": "Leeds Conservatoire",
+    "Town": "Leeds"
+  },
+  {
+    "University": "Leeds Trinity University",
+    "Town": "Leeds"
+  },
+  {
+    "University": "Liverpool Hope University",
+    "Town": "Liverpool"
+  },
+  {
+    "University": "Liverpool John Moores University",
+    "Town": "Liverpool"
+  },
+  {
+    "University": "Liverpool School of Tropical Medicine",
+    "Town": "Liverpool"
+  },
+  {
+    "University": "London Business School",
+    "Town": "London"
+  },
+  {
+    "University": "London Metropolitan University",
+    "Town": "London"
+  },
+  {
+    "University": "London School of Hygiene and Tropical Medicine, University of London",
+    "Town": "London"
+  },
+  {
+    "University": "London South Bank University",
+    "Town": "London"
+  },
+  {
+    "University": "Loughborough University",
+    "Town": "Loughborough"
+  },
+  {
+    "University": "Manchester Metropolitan University",
+    "Town": "Manchester"
+  },
+  {
+    "University": "Middlesex University",
+    "Town": "London"
+  },
+  {
+    "University": "Newcastle University",
+    "Town": "Newcastle upon Tyne"
+  },
+  {
+    "University": "Newman University, Birmingham",
+    "Town": "Birmingham"
+  },
+  {
+    "University": "Northern School of Contemporary Dance",
+    "Town": "Leeds"
+  },
+  {
+    "University": "Northumbria University",
+    "Town": "Newcastle upon Tyne"
+  },
+  {
+    "University": "Norwich University of the Arts",
+    "Town": "Norwich"
+  },
+  {
+    "University": "Nottingham Trent University",
+    "Town": "Nottingham"
+  },
+  {
+    "University": "Oxford Brookes University",
+    "Town": "Oxford"
+  },
+  {
+    "University": "Plymouth Marjon University",
+    "Town": "Plymouth"
+  },
+  {
+    "University": "Queen Margaret University",
+    "Town": "Edinburgh"
+  },
+  {
+    "University": "Queen Mary University of London",
+    "Town": "London"
+  },
+  {
+    "University": "Queen's University Belfast",
+    "Town": "Belfast"
+  },
+  {
+    "University": "Ravensbourne University London",
+    "Town": "London"
+  },
+  {
+    "University": "Regent's University London",
+    "Town": "London"
+  },
+  {
+    "University": "Richmond, The American International University in London",
+    "Town": "London"
+  },
+  {
+    "University": "Robert Gordon University",
+    "Town": "Aberdeen"
+  },
+  {
+    "University": "Rose Bruford College",
+    "Town": "London"
+  },
+  {
+    "University": "Royal College of Art",
+    "Town": "London"
+  },
+  {
+    "University": "Royal College of Music",
+    "Town": "London"
+  },
+  {
+    "University": "Royal Conservatoire of Scotland",
+    "Town": "Glasgow"
+  },
+  {
+    "University": "Royal Holloway, University of London",
+    "Town": "Egham"
+  },
+  {
+    "University": "Royal Northern College of Music",
+    "Town": "Manchester"
+  },
+  {
+    "University": "School of Advanced Study, University of London",
+    "Town": "London"
+  },
+  {
+    "University": "Scotland's Rural College",
+    "Town": "Edinburgh"
+  },
+  {
+    "University": "Sheffield Hallam University",
+    "Town": "Sheffield"
+  },
+  {
+    "University": "SOAS, University of London",
+    "Town": "London"
+  },
+  {
+    "University": "Solent University",
+    "Town": "Southampton"
+  },
+  {
+    "University": "St George's, University of London",
+    "Town": "London"
+  },
+  {
+    "University": "St Mary's University, Twickenham",
+    "Town": "Twickenham"
+  },
+  {
+    "University": "Staffordshire University",
+    "Town": "Stoke-on-Trent"
+  },
+  {
+    "University": "Swansea University",
+    "Town": "Swansea"
+  },
+  {
+    "University": "Teesside University",
+    "Town": "Middlesbrough"
+  },
+  {
+    "University": "The Courtauld Institute of Art, University of London",
+    "Town": "London"
+  },
+  {
+    "University": "The Glasgow School of Art",
+    "Town": "Glasgow"
+  },
+  {
+    "University": "The Liverpool Institute for Performing Arts",
+    "Town": "Liverpool"
+  },
+  {
+    "University": "The London Institute of Banking and Finance",
+    "Town": "London"
+  },
+  {
+    "University": "The London School of Economics and Political Science",
+    "Town": "London"
+  },
+  {
+    "University": "The Royal Academy of Music, University of London",
+    "Town": "London"
+  },
+  {
+    "University": "The Royal Agricultural University",
+    "Town": "Cirencester"
+  },
+  {
+    "University": "The Royal Central School of Speech and Drama",
+    "Town": "London"
+  },
+  {
+    "University": "The Royal Veterinary College University of London",
+    "Town": "London"
+  },
+  {
+    "University": "The University of Law",
+    "Town": "Guildford"
+  },
+  {
+    "University": "The University of Northampton",
+    "Town": "Northampton"
+  },
+  {
+    "University": "The University of York",
+    "Town": "York"
+  },
+  {
+    "University": "Trinity Laban Conservatoire of Music and Dance",
+    "Town": "London"
+  },
+  {
+    "University": "Ulster University",
+    "Town": "Coleraine"
+  },
+  {
+    "University": "University College Birmingham",
+    "Town": "Birmingham"
+  },
+  {
+    "University": "University College London",
+    "Town": "London"
+  },
+  {
+    "University": "University for the Creative Arts",
+    "Town": "Farnham"
+  },
+  {
+    "University": "University of Aberdeen",
+    "Town": "Aberdeen"
+  },
+  {
+    "University": "University of Bath",
+    "Town": "Bath"
+  },
+  {
+    "University": "University of Bedfordshire",
+    "Town": "Luton"
+  },
+  {
+    "University": "University of Birmingham",
+    "Town": "Birmingham"
+  },
+  {
+    "University": "University of Bolton",
+    "Town": "Bolton"
+  },
+  {
+    "University": "University of Bradford",
+    "Town": "Bradford"
+  },
+  {
+    "University": "University of Brighton",
+    "Town": "Brighton"
+  },
+  {
+    "University": "University of Bristol",
+    "Town": "Bristol"
+  },
+  {
+    "University": "University of Buckingham",
+    "Town": "Buckingham"
+  },
+  {
+    "University": "University of Cambridge",
+    "Town": "Cambridge"
+  },
+  {
+    "University": "University of Central Lancashire",
+    "Town": "Preston"
+  },
+  {
+    "University": "University of Chester",
+    "Town": "Chester"
+  },
+  {
+    "University": "University of Chichester",
+    "Town": "Chichester"
+  },
+  {
+    "University": "University of Cumbria",
+    "Town": "Carlisle"
+  },
+  {
+    "University": "University of Derby",
+    "Town": "Derby"
+  },
+  {
+    "University": "University of Dundee",
+    "Town": "Dundee"
+  },
+  {
+    "University": "University of East Anglia",
+    "Town": "Norwich"
+  },
+  {
+    "University": "University of East London",
+    "Town": "London"
+  },
+  {
+    "University": "University of Edinburgh",
+    "Town": "Edinburgh"
+  },
+  {
+    "University": "University of Essex",
+    "Town": "Colchester"
+  },
+  {
+    "University": "University of Exeter",
+    "Town": "Exeter"
+  },
+  {
+    "University": "University of Glasgow",
+    "Town": "Glasgow"
+  },
+  {
+    "University": "University of Gloucestershire",
+    "Town": "Cheltenham"
+  },
+  {
+    "University": "University of Greenwich",
+    "Town": "London"
+  },
+  {
+    "University": "University of Hertfordshire",
+    "Town": "Hatfield"
+  },
+  {
+    "University": "University of Huddersfield",
+    "Town": "Huddersfield"
+  },
+  {
+    "University": "University of Hull",
+    "Town": "Hull"
+  },
+  {
+    "University": "University of Kent",
+    "Town": "Canterbury"
+  },
+  {
+    "University": "University of Leeds",
+    "Town": "Leeds"
+  },
+  {
+    "University": "University of Leicester",
+    "Town": "Leicester"
+  },
+  {
+    "University": "University of Lincoln",
+    "Town": "Lincoln"
+  },
+  {
+    "University": "University of Liverpool",
+    "Town": "Liverpool"
+  },
+  {
+    "University": "University of London",
+    "Town": "London"
+  },
+  {
+    "University": "University of Manchester",
+    "Town": "Manchester"
+  },
+  {
+    "University": "University of Nottingham",
+    "Town": "Nottingham"
+  },
+  {
+    "University": "University of Oxford",
+    "Town": "Oxford"
+  },
+  {
+    "University": "University of Plymouth",
+    "Town": "Plymouth"
+  },
+  {
+    "University": "University of Portsmouth",
+    "Town": "Portsmouth"
+  },
+  {
+    "University": "University of Reading",
+    "Town": "Reading"
+  },
+  {
+    "University": "University of Roehampton",
+    "Town": "London"
+  },
+  {
+    "University": "University of Salford",
+    "Town": "Salford"
+  },
+  {
+    "University": "University of Sheffield",
+    "Town": "Sheffield"
+  },
+  {
+    "University": "University of South Wales",
+    "Town": "Pontypridd"
+  },
+  {
+    "University": "University of Southampton",
+    "Town": "Southampton"
+  },
+  {
+    "University": "University of St Andrews",
+    "Town": "St Andrews"
+  },
+  {
+    "University": "University of Stirling",
+    "Town": "Stirling"
+  },
+  {
+    "University": "University of Strathclyde",
+    "Town": "Glasgow"
+  },
+  {
+    "University": "University of Suffolk",
+    "Town": "Ipswich"
+  },
+  {
+    "University": "University of Sunderland",
+    "Town": "Sunderland"
+  },
+  {
+    "University": "University of Surrey",
+    "Town": "Guildford"
+  },
+  {
+    "University": "University of Sussex",
+    "Town": "Brighton"
+  },
+  {
+    "University": "University of the Arts London",
+    "Town": "London"
+  },
+  {
+    "University": "University of the Highlands and Islands",
+    "Town": "Inverness"
+  },
+  {
+    "University": "University of the West of England",
+    "Town": "Bristol"
+  },
+  {
+    "University": "University of the West of Scotland",
+    "Town": "Paisley"
+  },
+  {
+    "University": "University of Wales",
+    "Town": "Cardiff"
+  },
+  {
+    "University": "University of Wales Trinity Saint David",
+    "Town": "Carmarthen"
+  },
+  {
+    "University": "University of Warwick",
+    "Town": "Coventry"
+  },
+  {
+    "University": "University of West London",
+    "Town": "Ealing"
+  },
+  {
+    "University": "University of Westminster",
+    "Town": "London"
+  },
+  {
+    "University": "University of Winchester",
+    "Town": "Winchester"
+  },
+  {
+    "University": "University of Wolverhampton",
+    "Town": "Wolverhampton"
+  },
+  {
+    "University": "University of Worcester",
+    "Town": "Worcester"
+  },
+  {
+    "University": "Wrexham Glyndwr University",
+    "Town": "Wrexham"
+  },
+  {
+    "University": "Writtle University College",
+    "Town": "Chelmsford"
+  },
+  {
+    "University": "York St John University",
+    "Town": "York"
+  }
+]

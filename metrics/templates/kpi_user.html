@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="container mt-4">
+        <h2>Listing Insight</h2>
+    </div>
+    <div class="row p-3 justify-content-center">
+        <div id="listing-pie-chart" style="width: 300px;height:270px;"></div>
+        <div id="price-pie-chart" style="width: 300px;height:270px;"></div>
+        <div id="ratio-gauge-chart" style="width: 250px;height:250px;"></div>
+        <div id="order-pie-chart" style="width: 300px;height:270px;"></div>
+        <div id="weight-pie-chart" style="width: 300px;height:270px;"></div>
+    </div>
+    {% include 'listing_dashboard.html' %}
+
+
+    <script>
+
+        const listingPieChart = echarts.init(document.getElementById('listing-pie-chart'));
+        const orderPieChart = echarts.init(document.getElementById('order-pie-chart'));
+        const pricePieChart = echarts.init(document.getElementById('price-pie-chart'));
+        const weightPieChart = echarts.init(document.getElementById('weight-pie-chart'));
+        const ratioGaugeChart = echarts.init(document.getElementById('ratio-gauge-chart'));
+        const contributionRatio = {{ user_contribution_ratio|default:"0" }};
+        const formattedRatio = contributionRatio.toFixed(2);
+
+        const userListingData = [
+            {value: {{ user_active_listing|default:"0" }}, name: 'Active'},
+            {value: {{ user_pending_listing|default:"0" }}, name: 'Pending'},
+            {value: {{ user_settled_listing|default:"0" }}, name: 'Settled'},
+            {
+                value: {{ user_total_listing|default:"0" }},
+                itemStyle: {
+                    color: 'none',
+                    decal: {
+                        symbol: 'none'
+                    }
+                },
+                label: {
+                    show: false
+                }
+            }
+        ];
+
+        let userListingOption = {
+            title: {
+                text: 'Listing Overview',
+                left: 'center',
+                top: '5%'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '20%',
+                left: 'center',
+                selectedMode: false
+            },
+            series: [
+                {
+                    name: 'Listing',
+                    type: 'pie',
+                    radius: ['10%', '20%'],
+                    center: ['50%', '50%'],
+                    startAngle: 180,
+                    endAngle: 360,
+                    label: {
+                        show: true,
+                        formatter(param) {
+                            return param.name + ' (' + param.percent * 2 + '%)';
+                        }
+                    },
+                    data: userListingData
+                }
+            ]
+        };
+
+        if (userListingData.every(data => data.value === 0)) {
+            userListingOption = {
+                title: {
+                    text: 'No Data Available',
+                    left: 'center',
+                    top: 'center'
+                }
+            };
+        }
+
+        const userOrderData = [
+            {value: {{ user_delivery_order|default:"0" }}, name: 'Delivery'},
+            {value: {{ user_meetup_order|default:"0" }}, name: 'Meetup'},
+            {
+                value: {{ user_total_order|default:"0" }},
+                itemStyle: {
+                    color: 'none',
+                    decal: {
+                        symbol: 'none'
+                    }
+                },
+                label: {
+                    show: false
+                }
+            }
+        ];
+
+        let userOrderOption = {
+            title: {
+                text: 'Order Overview',
+                left: 'center',
+                top: '5%'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '20%',
+                left: 'center',
+                selectedMode: false
+            },
+            series: [
+                {
+                    name: 'Order',
+                    type: 'pie',
+                    radius: ['10%', '20%'],
+                    center: ['50%', '50%'],
+                    startAngle: 180,
+                    endAngle: 360,
+                    label: {
+                        show: true,
+                        formatter(param) {
+                            return param.name + ' (' + param.percent * 2 + '%)';
+                        }
+                    },
+                    data: userOrderData
+                }
+            ]
+        };
+
+        if (userOrderData.every(data => data.value === 0)) {
+            userOrderOption = {
+                title: {
+                    text: 'No Data Available',
+                    left: 'center',
+                    top: 'center'
+                }
+            };
+        }
+
+        const userPriceData = [
+            {value: {{ user_active_price|default:"0" }}, name: 'Active £'},
+            {value: {{ user_pending_price|default:"0" }}, name: 'Pending £'},
+            {value: {{ user_settled_price|default:"0" }}, name: 'Settled £'},
+            {
+                value: {{ user_total_price|default:"0" }},
+                itemStyle: {
+                    color: 'none',
+                    decal: {
+                        symbol: 'none'
+                    }
+                },
+                label: {
+                    show: false
+                }
+            }
+        ];
+
+        let userPriceOption = {
+            title: {
+                text: 'Price Overview',
+                left: 'center',
+                top: '5%'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '20%',
+                left: 'center',
+                selectedMode: false
+            },
+            series: [
+                {
+                    name: 'Price',
+                    type: 'pie',
+                    radius: ['10%', '20%'],
+                    center: ['50%', '50%'],
+                    startAngle: 180,
+                    endAngle: 360,
+                    label: {
+                        show: true,
+                        formatter(param) {
+                            return param.name + ' (' + param.percent * 2 + '%)';
+                        }
+                    },
+                    data: userPriceData
+                }
+            ]
+        };
+
+        if (userPriceData.every(data => data.value === 0)) {
+            userPriceOption = {
+                title: {
+                    text: 'No Data Available',
+                    left: 'center',
+                    top: 'center'
+                }
+            };
+        }
+
+        const userWeightData = [
+            {value: {{ user_delivery_weight|default:"0" }}, name: 'Delivery (kg)'},
+            {value: {{ user_meetup_weight|default:"0" }}, name: 'Meetup (kg)'},
+            {
+                value: {{ user_total_weight|default:"0" }},
+                itemStyle: {
+                    color: 'none',
+                    decal: {
+                        symbol: 'none'
+                    }
+                },
+                label: {
+                    show: false
+                }
+            }
+        ];
+
+        let userWeightOption = {
+            title: {
+                text: 'Weight Overview',
+                left: 'center',
+                top: '5%'
+            },
+            tooltip: {
+                trigger: 'item',
+            },
+            legend: {
+                top: '20%',
+                left: 'center',
+                selectedMode: false
+            },
+            series: [
+                {
+                    name: 'Weight',
+                    type: 'pie',
+                    radius: ['10%', '20%'],
+                    center: ['50%', '50%'],
+                    startAngle: 180,
+                    endAngle: 360,
+                    label: {
+                        show: true,
+                        formatter(param) {
+                            return param.name + ' (' + param.percent * 2 + '%)';
+                        }
+                    },
+                    data: userWeightData
+                }
+            ]
+        };
+
+        if (userWeightData.every(data => data.value === 0)) {
+            userWeightOption = {
+                title: {
+                    text: 'No Data Available',
+                    left: 'center',
+                    top: 'center'
+                }
+            };
+        }
+
+        const userRatioOption = {
+            title: {
+                text: 'Contribution to ' + '{{ user.city }}',
+                left: 'center',
+                top: '5%'
+            },
+                    tooltip: {
+            trigger: 'item',
+            formatter: function (param) {
+                const note = '<b>Please Note:</b><br/>' +
+                    'The numbers are rounded and may have minor differences due to computer calculations.<br/><br/>';
+
+                const timestamp = 'Last Updated: ' + (new Date()).toLocaleString();
+
+                return note + timestamp;
+            }
+        },
+            series: [
+                {
+                    type: 'gauge',
+                    radius: '70%',
+                    startAngle: 180,
+                    endAngle: 0,
+                    min: 0,
+                    max: 100,
+                    splitNumber: 5,
+                    itemStyle: {
+                        color: '#8ec270',
+                        shadowColor: 'rgba(0,138,255,0.45)',
+                        shadowBlur: 10,
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
+                    },
+                    progress: {
+                        show: true,
+                        roundCap: true,
+                        width: 13
+                    },
+                    pointer: {
+                        icon: 'path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z',
+                        length: '60%',
+                        width: 12,
+                        offsetCenter: [0, '5%']
+                    },
+                    axisLine: {
+                        roundCap: true,
+                        lineStyle: {
+                            width: 15
+                        }
+                    },
+                    axisTick: {
+                        splitNumber: 2,
+                        lineStyle: {
+                            width: 2,
+                            color: '#999'
+                        }
+                    },
+                    splitLine: {
+                        length: 10,
+                        lineStyle: {
+                            width: 3,
+                            color: '#999'
+                        }
+                    },
+                    axisLabel: {
+                        distance: 20,
+                        color: '#999',
+                        fontSize: 12
+                    },
+                    title: {
+                        show: false
+                    },
+                    detail: {
+                        backgroundColor: '#fff',
+                        borderColor: '#999',
+                        borderWidth: 2,
+                        width: 'auto',
+                        lineHeight: 20,
+                        height: 20,
+                        borderRadius: 8,
+                        offsetCenter: [0, '50%'],
+                        valueAnimation: true,
+                        formatter: '{value|' + formattedRatio + '}{unit|%}',
+                        rich: {
+                            value: {
+                                fontSize: 16,
+                                fontWeight: 'bolder',
+                                color: '#777'
+                            },
+                            unit: {
+                                fontSize: 12,
+                                color: '#999',
+                                padding: [-10, 0, -20, 10]
+                            }
+                        }
+                    },
+                    data: [
+                        {
+                            value: {{ user_contribution_ratio }}
+                        }
+                    ]
+                }
+            ]
+        };
+
+
+        listingPieChart.setOption(userListingOption);
+        orderPieChart.setOption(userOrderOption);
+        pricePieChart.setOption(userPriceOption);
+        weightPieChart.setOption(userWeightOption);
+        ratioGaugeChart.setOption(userRatioOption);
+
+
+    </script>
+{% endblock %}

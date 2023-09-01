@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Chat</h2>
+
+        <div class="row mt-4">
+            <!-- Chat Dashboard: Left -->
+            <div class="col-md-4">
+                <div class="chat-sidebar list-group">
+                    {% for room in chat_rooms %}
+                        <a href="{% url 'chatroom' room.listing_id %}"
+                           class="list-group-item list-group-item-action">
+                            {% if room.has_avatar %}
+                                <img src="{{ room.other_user_avatar_url }}" alt="User Image" class="rounded-circle"
+                                     width="30" height="30">
+                            {% else %}
+                                <i class="fa-solid fa-circle-user" style="font-size: 30px; color: #737373;"></i>
+                            {% endif %}
+                            {{ room.other_user_prefix }}
+                        </a>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+            <!-- Chat Room: Right -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        {% if active_chat_room %}
+                            <!-- Chat Log: Display Incoming Messages -->
+                            <div id="chat-log-container">
+                            <h3>Chat with {{ active_chat_room.other_user_prefix }} about <strong><a
+                                    href="{% url 'listing_details' active_chat_room.listing.pk %}">
+                                {{ active_chat_room.listing.name }}
+                            </a></strong>
+                            </h3>
+                            <label hidden for="chat-log"></label>
+                            <textarea id="chat-log" class="form-control mb-3" rows="15" readonly>
+                        {% for message in recent_messages %}
+                            {{ active_chat_room.other_user_prefix }}: {{ message.content }}
+                            {{ message.timestamp|date:"H:i:s" }}
+                        {% endfor %}
+                            </textarea>
+
+                            <!-- Input: Type a Message -->
+                            <div class="container-fluid">
+                                <div class="text-input-group">
+                                    <input id="chat-message-input" type="text" class="form-control"
+                                           placeholder="Type a message..." aria-label="Chat message">
+                                    <input id="chat-message-submit" class="btn btn-primary" type="button" value="Send">
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                Select a chat from the left to start conversing.
+                            </div>
+                        {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            {% if active_chat_room and active_chat_room.listing %}
+                const chatListingId = "{{ active_chat_room.listing_id }}";
+
+                const chatSocket = new WebSocket(
+                    'ws://' + window.location.host + '/ws/chat/' + chatListingId + '/'
+                );
+
+                chatSocket.onmessage = function (e) {
+                    const data = JSON.parse(e.data);
+                    const message = data['message'];
+                    const timestamp = new Date().toLocaleTimeString('en-US', {
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    const formattedMessage = `[${timestamp}] ${message}\n`;
+
+                    const chatLogTextarea = document.querySelector('#chat-log');
+                    chatLogTextarea.value += formattedMessage;
+                    chatLogTextarea.scrollTop = chatLogTextarea.scrollHeight;
+                }
+
+                const messageInput = document.querySelector("#chat-message-input");
+                messageInput.focus();
+                messageInput.addEventListener("keyup", function (e) {
+                    if (e.keyCode === 13) {  // Enter key pressed
+                        document.querySelector("#chat-message-submit").click();
+                    }
+                });
+
+                const chatMessageSubmit = document.querySelector("#chat-message-submit");
+                chatMessageSubmit.addEventListener("click", function () {
+                    const messageInputDom = document.querySelector("#chat-message-input");
+                    const message = messageInputDom.value;
+
+                    if (chatSocket.readyState === WebSocket.OPEN) {
+                        chatSocket.send(JSON.stringify({
+                            'message': message
+                        }));
+                        messageInputDom.value = '';
+                    } else {
+                        console.error("WebSocket is not open: ", chatSocket.readyState);
+                    }
+                });
+
+                chatSocket.onclose = function (e) {
+                    console.error('Chat socket closed unexpectedly');
+                };
+
+            {% else %}
+                console.error("Active chat room or listing is not available.");
+            {% endif %}
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container mt-4">
+        <h2>Metrics Overview</h2>
+    </div>
+    {% include 'platform.html' %}
+    <div class="row p-3 justify-content-center">
+        <div id="bar-chart" style="width: 900px; height: 500px;"></div>
+    </div>
+
+
+
+    <script>
+        const barChart = echarts.init(document.getElementById('bar-chart'));
+        const city_data = {{ city_data|safe }};
+
+        const barOption = {
+            title: {
+                text: "Top 20 Cities' Contributions to the Platform",
+                left: 'center',
+                top: '0%'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    const data = params.data;
+                    return `
+                        <strong>${data.name}</strong><br />
+                        Contribution Ratio: ${data.value.toFixed(2)}%<br />
+                        Total Listing: ${data.listing}<br />
+                        Total Order: ${data.order}<br />
+                        Total Price: £ ${data.price.toFixed(2)}<br />
+                        Total Weight: ${data.total_weight.toFixed(2)} kg<br />
+                        Delivery Weight: ${data.delivery_weight.toFixed(2)} kg<br />
+                        Meetup Weight: ${data.meetup_weight.toFixed(2)} kg<br />
+                    `;
+                }
+            },
+            xAxis: {
+                type: 'value'
+            },
+            yAxis: {
+                type: 'category',
+                axisLabel: {
+                    rotate: 30,
+                    fontSize: 10,
+                    formatter: function (value) {
+                        return value.length > 10 ? value.substring(0, 10) + '...' : value;
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    showContent: true,
+                },
+                data: city_data.map(function (item) {
+                    return item.name;
+                }),
+                inverse: true
+            },
+            animationDurationUpdate: 2000,
+            series: {
+                type: 'bar',
+                id: 'contribution',
+                data: city_data.map(function (item) {
+                    return item;
+                }),
+                universalTransition: true
+            }
+        };
+
+        barChart.setOption(barOption, true);
+
+        barChart.resize();
+        window.onresize = function () {
+            barChart.resize();
+        };
+    </script>
+{% endblock %}
