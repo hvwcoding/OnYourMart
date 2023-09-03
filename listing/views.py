@@ -151,9 +151,6 @@ class ListingSearchView(View):
             queryset = queryset.order_by('price')
         elif sort_option == 'price_high_to_low':
             queryset = queryset.order_by('-price')
-        # elif sort_option == 'move_out_date':
-        #     queryset = queryset.order_by('user__move_out_date')
-
         return queryset
 
     def get(self, request):
@@ -171,7 +168,6 @@ class ListingSearchView(View):
                 {'value': 'recently_added', 'label': 'Recently Added'},
                 {'value': 'price_low_to_high', 'label': 'Price: Low to High'},
                 {'value': 'price_high_to_low', 'label': 'Price: High to Low'},
-                # {'value': 'move_out_date', 'label': 'Soonest Move Out Date'}
             ]
         }
         return render(request, self.template_name, context)

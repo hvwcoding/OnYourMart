@@ -44,15 +44,6 @@ class CustomUserCreationForm(UserCreationForm):
         if password1 and password2 and password1 != password2:
             raise ValidationError('Passwords do not match.')
 
-    def clean_university(self):
-        instance_university = self.instance.university
-        new_university = self.cleaned_data.get('university')
-
-        if instance_university and new_university != instance_university:
-            raise forms.ValidationError("The university for a user can only be set once and cannot be changed.")
-
-        return new_university
-
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
