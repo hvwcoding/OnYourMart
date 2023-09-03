@@ -266,23 +266,32 @@
             };
         }
 
+        let city = '{{ user.city }}';
+        let originalTitle = 'Contribution to ' + city;
+        let maxLength = 25;
+
+        // Truncate title if it exceeds maximum length
+        if (originalTitle.length > maxLength) {
+            originalTitle = originalTitle.substring(0, maxLength - 3) + '...';
+        }
+
         const userRatioOption = {
             title: {
-                text: 'Contribution to ' + '{{ user.city }}',
+                text: originalTitle,
                 left: 'center',
                 top: '5%'
             },
-                    tooltip: {
-            trigger: 'item',
-            formatter: function (param) {
-                const note = '<b>Please Note:</b><br/>' +
-                    'The numbers are rounded and may have minor differences due to computer calculations.<br/><br/>';
+            tooltip: {
+                trigger: 'item',
+                formatter: function (param) {
+                    const note = '<b>Please Note:</b><br/>' +
+                        'The numbers are rounded and may have minor differences due to computer calculations.<br/><br/>';
 
-                const timestamp = 'Last Updated: ' + (new Date()).toLocaleString();
+                    const timestamp = 'Last Updated: ' + (new Date()).toLocaleString();
 
-                return note + timestamp;
-            }
-        },
+                    return note + timestamp;
+                }
+            },
             series: [
                 {
                     type: 'gauge',
