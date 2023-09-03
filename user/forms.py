@@ -9,18 +9,20 @@ from django.utils import timezone
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(label='Email', widget=forms.EmailInput)
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput,
-                                help_text=password_validation.password_validators_help_text_html())
-    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
     university = forms.ModelChoiceField(
         queryset=University.objects.all().order_by('name'),
         required=True,
+        help_text="CAUTION! The university for a user can only be set once and cannot be changed."
+                  " Please choose carefully.",
         widget=forms.Select(attrs={'id': 'id_university'}),
     )
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput,
+                                help_text=password_validation.password_validators_help_text_html())
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'password1', 'password2', 'university')
+        fields = ('email', 'university', 'password1', 'password2')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
