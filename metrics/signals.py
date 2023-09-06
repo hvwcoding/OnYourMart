@@ -48,29 +48,19 @@ def update_city_metrics(sender, instance, **kwargs):
 
     # Updated total_listing and total_price
     city_metrics.total_listing = UserMetrics.objects.filter(user__city=city).aggregate(
-        total_listing=Sum('active_listing') + Sum('pending_listing') + Sum('settled_listing')
-    )['total_listing'] or 0
+        total_listing=Sum('active_listing') + Sum('pending_listing') + Sum('settled_listing'))['total_listing'] or 0
     city_metrics.total_price = UserMetrics.objects.filter(user__city=city).aggregate(
-        total_price=Sum('active_price') + Sum('pending_price') + Sum('settled_price')
-    )['total_price'] or 0
+        total_price=Sum('active_price') + Sum('pending_price') + Sum('settled_price'))['total_price'] or 0
 
-    city_metrics.total_order = Order.objects.filter(
-        listing__user__city=city
-    ).count()
+    city_metrics.total_order = Order.objects.filter(listing__user__city=city).count()
 
-    city_metrics.delivery_weight = Order.objects.filter(
-        listing__user__city=city,
-        logistics_option__name='Delivery'
-    ).aggregate(
-        delivery_weight=Sum('weight')
-    )['delivery_weight'] or 0
+    city_metrics.delivery_weight = \
+        Order.objects.filter(listing__user__city=city, logistics_option__name='Delivery').aggregate(
+            delivery_weight=Sum('weight'))['delivery_weight'] or 0
 
-    city_metrics.meetup_weight = Order.objects.filter(
-        listing__user__city=city,
-        logistics_option__name='Meetup'
-    ).aggregate(
-        meetup_weight=Sum('weight')
-    )['meetup_weight'] or 0
+    city_metrics.meetup_weight = \
+        Order.objects.filter(listing__user__city=city, logistics_option__name='Meetup').aggregate(
+            meetup_weight=Sum('weight'))['meetup_weight'] or 0
 
     contribution_ratio = city_metrics.calculate_city_contribution_ratio()
     city_metrics.contribution_ratio = contribution_ratio
@@ -99,25 +89,17 @@ def update_platform_metrics(sender, instance, **kwargs):
     platform_metrics.settled_price = UserMetrics.objects.aggregate(
         settled_price=Sum('settled_price'))['settled_price'] or 0
 
-    platform_metrics.delivery_order = Order.objects.filter(
-        logistics_option__name='Delivery'
-    ).count()
+    platform_metrics.delivery_order = Order.objects.filter(logistics_option__name='Delivery').count()
 
-    platform_metrics.meetup_order = Order.objects.filter(
-        logistics_option__name='Meetup'
-    ).count()
+    platform_metrics.meetup_order = Order.objects.filter(logistics_option__name='Meetup').count()
 
-    platform_metrics.delivery_weight = Order.objects.filter(
-        logistics_option__name='Delivery'
-    ).aggregate(
-        delivery_weight=Sum('weight')
-    )['delivery_weight'] or 0
+    platform_metrics.delivery_weight = \
+        Order.objects.filter(logistics_option__name='Delivery').aggregate(delivery_weight=Sum('weight'))[
+            'delivery_weight'] or 0
 
-    platform_metrics.meetup_weight = Order.objects.filter(
-        logistics_option__name='Meetup'
-    ).aggregate(
-        meetup_weight=Sum('weight')
-    )['meetup_weight'] or 0
+    platform_metrics.meetup_weight = \
+        Order.objects.filter(logistics_option__name='Meetup').aggregate(meetup_weight=Sum('weight'))[
+            'meetup_weight'] or 0
 
     contribution_ratio = platform_metrics.calculate_platform_contribution_ratio()
     platform_metrics.platform_contribution_ratio = contribution_ratio
@@ -153,13 +135,12 @@ def order_changes(sender, instance, **kwargs):
     user_metrics.delivery_weight = Order.objects.filter(listing__status__name='Settled',
                                                         logistics_option__name='Delivery',
                                                         listing__user=instance.listing.user).aggregate(
-        total_weight=Sum('weight')
-    )['total_weight'] or 0
+        total_weight=Sum('weight'))['total_weight'] or 0
+
     user_metrics.meetup_weight = Order.objects.filter(listing__status__name='Settled',
                                                       logistics_option__name='Meetup',
                                                       listing__user=instance.listing.user).aggregate(
-        total_weight=Sum('weight')
-    )['total_weight'] or 0
+        total_weight=Sum('weight'))['total_weight'] or 0
 
     contribution_ratio = user_metrics.calculate_user_contribution_ratio()
     user_metrics.contribution_ratio = contribution_ratio
