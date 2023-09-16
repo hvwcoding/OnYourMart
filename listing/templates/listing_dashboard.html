@@ -1,0 +1,144 @@
+<div class="container mt-4">
+    <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'all_tab')">All</button>
+        <button class="tablinks" onclick="openTab(event, 'active_tab')">Active</button>
+        <button class="tablinks" onclick="openTab(event, 'pending_tab')">Pending</button>
+        <button class="tablinks" onclick="openTab(event, 'settled_tab')">Settled</button>
+    </div>
+
+    <div id="all_tab" class="tabcontent" style="display: block;">
+        <table class="listing-table">
+            <tr>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Timestamp</th>
+                <th>Price</th>
+                <th>Creator</th>
+            </tr>
+            <tbody>
+            {% for listings in all_listing %}
+                <tr data-url="{% url 'listing_details' listings.id %}">
+                    <td>{{ listings.listing_type }}</td>
+                    <td>{{ listings.name }}</td>
+                    <td>{{ listings.created_date|date:"d/m/Y" }}</td>
+                    <td>£{{ listings.price }}</td>
+                    {% if listings.is_user_listing %}
+                        <td><i class="fa-solid fa-check"></i></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="active_tab" class="tabcontent">
+        <table class="listing-table">
+            <tr>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Timestamp</th>
+                <th>Price</th>
+                <th>Creator</th>
+            </tr>
+            <tbody>
+            {% for listings in active_listing %}
+                <tr data-url="{% url 'listing_details' listings.id %}">
+                    <td>{{ listings.listing_type }}</td>
+                    <td>{{ listings.name }}</td>
+                    <td>{{ listings.created_date|date:"d/m/Y" }}</td>
+                    <td>£{{ listings.price }}</td>
+                    {% if listings.is_user_listing %}
+                        <td><i class="fa-solid fa-check"></i></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="pending_tab" class="tabcontent">
+        <table class="listing-table">
+            <tr>
+                <th>Order#</th>
+                <th>Title</th>
+                <th>Timestamp</th>
+                <th>Price</th>
+                <th>Creator</th>
+            </tr>
+            <tbody>
+            {% for order in pending_listing %}
+                <tr data-url="{% url 'listing_details' order.listing.id %}">
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.listing.name }}</td>
+                    <td>{{ order.order_date|date:"d/m/Y" }}</td>
+                    <td>£{{ order.listing.price }}</td>
+                    {% if order.is_user_listing %}
+                        <td><i class="fa-solid fa-check"></i></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="settled_tab" class="tabcontent">
+        <table class="listing-table">
+            <tr>
+                <th>Order #</th>
+                <th>Title</th>
+                <th>Timestamp</th>
+                <th>Price</th>
+                <th>Creator</th>
+            </tr>
+            <tbody>
+            {% for order in settled_listing %}
+                <tr data-url="{% url 'listing_details' order.listing.id %}">
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.listing.name }}</td>
+                    <td>{{ order.completed_date|date:"d/m/Y" }}</td>
+                    <td>£{{ order.listing.price }}</td>
+                    {% if order.is_user_listing %}
+                        <td><i class="fa-solid fa-check"></i></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        let i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll(".listing-table tr[data-url]");
+        rows.forEach(function (row) {
+            row.addEventListener("click", function () {
+                window.location.href = row.getAttribute("data-url");
+            });
+        });
+    });
+
+</script>
+

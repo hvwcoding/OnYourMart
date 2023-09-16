@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <div class="container mt-4">
+        <h2>{% if is_update %}Edit{% else %}Create{% endif %} Listing</h2>
+
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            {% bootstrap_field form.listing_type %}
+            {% bootstrap_field form.name %}
+
+            <div class="form-group">
+                {{ formset.management_form }}
+                {% for photo_form in formset %}
+                    {{ photo_form.id }}
+                    <div id="image-preview" class="mt-2"></div>
+                    <div class="form-group">
+                        {% bootstrap_field photo_form.image %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% bootstrap_field form.description %}
+            {% bootstrap_field form.category %}
+            {% bootstrap_field form.condition %}
+            {% bootstrap_field form.price %}
+            {% bootstrap_field form.meetup_available %}
+            {% bootstrap_field form.meetup_point %}
+
+            <div class="text-center">
+                {% bootstrap_button 'Save' button_type="submit" button_class="btn-primary save-button" %}
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const priceField = document.getElementById('id_price');
+            const meetupAvailableField = document.getElementById('id_meetup_available');
+            const meetupPointField = document.getElementById('id_meetup_point');
+            const previewContainer = document.getElementById('image-preview');
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+            let isDirty = false;
+
+            // Listen for changes on any form input
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    isDirty = true;
+                });
+            });
+
+            // Beforeunload event
+            window.addEventListener('beforeunload', function (event) {
+                if (isDirty) {
+                    event.preventDefault();
+                    event.returnValue = '';
+                }
+            });
+
+            // Exclude save button from setting isDirty flag
+            const saveButton = document.querySelector('.save-button');
+            saveButton.addEventListener('click', function (event) {
+                isDirty = false;
+            });
+
+            function updateAllPreviews() {
+                fileInputs.forEach((input, index) => {
+                    const file = input.files[0];
+                    let img = previewContainer.children[index] || createImageElement(index);
+
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // If no file is selected (or cancelled), remove the image preview for this index
+                        img.remove();
+                    }
+                });
+                removeExtraPreviews();
+            }
+
+            function createImageElement() {
+                const img = document.createElement('img');
+                img.width = 100; // Set a preview size
+                previewContainer.appendChild(img);
+                return img;
+            }
+
+            function removeExtraPreviews() {
+                const currentImages = Array.from(previewContainer.querySelectorAll('img'));
+                while (currentImages.length > 6) {
+                    currentImages.pop().remove();
+                }
+            }
+
+            fileInputs.forEach((input) => {
+                input.addEventListener('change', updateAllPreviews);
+            });
+
+            function updatePriceFormat() {
+                const price = parseFloat(priceField.value);
+                if (!isNaN(price) && Number.isInteger(price)) {
+                    priceField.value = price.toFixed(2);
+                }
+            }
+
+            function toggleMeetupPointField() {
+                if (meetupAvailableField.checked) {
+                    meetupPointField.disabled = false;
+                } else {
+                    meetupPointField.disabled = true;
+                    meetupPointField.value = "";
+                }
+            }
+
+            priceField.addEventListener('blur', updatePriceFormat);
+            meetupAvailableField.addEventListener('change', toggleMeetupPointField);
+
+            toggleMeetupPointField();
+            updatePriceFormat();
+        });
+
+    </script>
+{% endblock %}

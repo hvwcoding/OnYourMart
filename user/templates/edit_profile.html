@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <div class="container mt-4">
+
+        <h2>Edit Profile</h2>
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="text-center">
+                <div class="avatar-container">
+                    {% if user.avatar %}
+                        <img id="avatarPreview" src="{{ user.avatar.url }}" alt="avatar"
+                             class="img-fluid rounded-circle avatar-img">
+                    {% else %}
+                        <i id="avatarPreview" class="fa-solid fa-circle-user"
+                           style="font-size: 152px; color: #737373;"></i>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% bootstrap_field form.avatar %}
+            {% bootstrap_field form.first_name %}
+            {% bootstrap_field form.last_name %}
+            {% bootstrap_field form.bio %}
+            {% bootstrap_field form.university %}
+            {% bootstrap_field form.move_out_date %}
+            <input type="hidden" name="selected_university" value="{{ selected_university_id }}">
+            <div class="text-center">
+                {% bootstrap_button 'Save' button_type="submit" button_class="btn-primary" %}
+            </div>
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                let moveOutDateField = document.getElementById('id_move_out_date')
+                let selectedDate = moveOutDateField.value;
+                let currentDate = new Date().toISOString().split('T')[0];
+
+                // For move out date field
+                function handleFieldStates() {
+
+                    if (selectedDate < currentDate) {
+                        moveOutDateField.value = currentDate;
+                    }
+                    moveOutDateField.min = currentDate;
+                    moveOutDateField.addEventListener('change', handleFieldStates)
+                }
+                moveOutDateField.min = currentDate;
+                moveOutDateField.addEventListener('change', handleFieldStates);
+            });
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#avatarPreview').replaceWith('<img id="avatarPreview" src="' + e.target.result + '' +
+                            '" alt="avatar" class="img-fluid rounded-circle avatar-img"' +
+                            ' style="width: 152px; height: 152px; object-fit: cover;">');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            // Trigger the image preview whenever a new file is selected in the file input field
+            $('input[name="avatar"]').change(function () {
+                readURL(this);
+            });
+        </script>
+
+    </div>
+{% endblock %}

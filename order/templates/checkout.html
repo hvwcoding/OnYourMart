@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <div class="container mt-4">
+        <h2>Order Summary</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row p-3" style="border: 1px solid #000; border-radius: 5px;">
+
+
+                <!-- Column 1: Image and Listing Details -->
+                <div class="col-md-3">
+                    {% with image=listing.images.first %}
+                        {% if image and image.image %}
+                            <div class="first-photo-item-overview">
+                                <img src="{{ image.image_thumbnail.url }}" alt="Listing thumbnail"
+                                     class="img-fluid rounded" loading="lazy">
+                            </div>
+                        {% else %}
+                            <div class="first-photo-item-overview">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+
+                <!-- Column 2: Listing Details -->
+                <div class="col-md-5" style="border-right: 1px solid #000;">
+                    <table class="table table-borderless">
+
+                        <tr>
+                            <td style="font-size: 20px"><strong>{{ listing.name }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Condition</strong></td>
+                            <td>{{ listing.condition }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Meetup</strong></td>
+                            <td>
+                                {% if listing.meetup_available %}
+                                    <span class="badge badge-success"><i
+                                            class="fas fa-check"></i> Available</span>
+                                {% else %}
+                                    Unavailable<br>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if listing.meetup_available %}
+                            {% if listing.meetup_point %}
+                                <tr>
+                                    <td><strong>Meetup at</strong></td>
+                                    <td>{{ listing.meetup_point }}</td>
+                                </tr>
+                                {% if listing.meetup_point.id == 2 %}
+                                    <tr>
+                                        <td><strong>University</strong></td>
+                                        <td>{{ listing.user.university }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endif %}
+                            <tr>
+                                <td><strong>City</strong></td>
+                                <td>{{ listing.user.city }}</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+
+                <!-- Column 3: Logistics Options and Pricing Details -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <table class="table table-borderless">
+                            <tbody>
+                            <tr>
+                                <td style="font-size: 20px"><strong>Logistics Option</strong></td>
+                            </tr>
+                            <tr>
+                                {% if not listing.meetup_available %}
+                                    <td>
+                                        <input class="form-check-input" type="radio" name="logistics_option"
+                                               id="meetupOption" value="2" disabled
+                                               onclick="updateTotalPrice('Meetup')">
+                                        <label class="form-check-label" for="meetupOption">
+                                            Meetup
+                                        </label>
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        <input class="form-check-input" type="radio" name="logistics_option"
+                                               id="meetupOption" value="2" checked
+                                               onclick="updateTotalPrice('Meetup')">
+                                        <label class="form-check-label" for="meetupOption">
+                                            Meetup
+                                        </label>
+                                    </td>
+                                {% endif %}
+                                <td>
+                                    <input class="form-check-input" type="radio" name="logistics_option"
+                                           id="deliveryOption" value="1"
+                                           {% if not listing.meetup_available %}checked{% endif %}
+                                           onclick="updateTotalPrice('Delivery')">
+                                    <label class="form-check-label" for="deliveryOption">
+                                        Delivery
+                                    </label>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Price</strong></td>
+                                <td style="text-align: right;">£{{ listing.price }}</td>
+                            </tr>
+                            <tr id="delivery_fee_row">
+                                <td><strong>Shipping</strong></td>
+                                <td style="text-align: right;" id="delivery_fee">£{{ delivery_fee }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 20px"><strong>Total</strong></td>
+                                <td style="font-size: 20px; text-align: right;" id="total_price">£{{ total_price }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="button-wrapper">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Pay Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function updateTotalPrice(option) {
+            let deliveryFeeValue = parseFloat('{{ delivery_fee }}');
+            console.log('Parsed Delivery Fee:', deliveryFeeValue);
+            let deliveryFee = document.getElementById('delivery_fee');
+            let totalPriceDisplay = document.getElementById('total_price');
+
+            let listingPrice = parseFloat('{{ listing.price }}');
+
+            if (option === 'Meetup') {
+                deliveryFee.innerHTML = '£0.00';
+                totalPriceDisplay.innerHTML = '£' + listingPrice.toFixed(2);
+            } else {
+                let deliveryFeeValue = parseFloat('{{ delivery_fee }}');
+                let total = listingPrice + deliveryFeeValue;
+
+                deliveryFee.innerHTML = '£' + deliveryFeeValue.toFixed(2);
+                totalPriceDisplay.innerHTML = '£' + total.toFixed(2);
+            }
+        }
+
+        window.onload = function () {
+            let meetupOptionChecked = document.getElementById('meetupOption').checked;
+            let deliveryOptionChecked = document.getElementById('deliveryOption').checked;
+
+            if (meetupOptionChecked) {
+                updateTotalPrice('Meetup');
+            } else if (deliveryOptionChecked) {
+                updateTotalPrice('Delivery');
+            }
+        }
+
+    </script>
+
+{% endblock %}

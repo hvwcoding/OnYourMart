@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2> Order Confirmation</h2>
+        <p>Thank you for your order. Your order has been placed and is currently being processed.</p>
+        <p><strong>Seller ({{ order.seller   }})</strong> will be in touch with you shortly to arrange delivery or
+            meetup.</p>
+
+        <table class="table table-borderless">
+            <tbody>
+            <tr>
+                <td><strong>Order#</strong></td>
+                <td> {{ order.id }}</td>
+            <tr>
+                <td><strong>Order Date</strong></td>
+                <td>{{ order.order_date|date:"d/m/Y, H:i" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Delivery Method</strong></td>
+                <td>{% if order.logistics_option.name == 'Delivery' %}Delivery{% else %}Meetup{% endif %}</td>
+            </tr>
+            {% if listing.meetup_available and order.delivery_option.name == 'Meetup' %}
+                {% if listing.meetup_point %}
+                    <tr>
+                        <td><strong>Meetup Point</strong></td>
+                        <td>{{ listing.meetup_point }}</td>
+                    </tr>
+                    {% if listing.meetup_point.id == 2 %}
+                        <tr>
+                            <td><strong>University</strong></td>
+                            <td>{{ listing.user.university }}</td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+                <tr>
+                    <td><strong>City</strong></td>
+                    <td>{{ listing.user.city }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td><strong>Item</strong></td>
+                <td>{{ order.listing.name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Order</strong></td>
+                <td>£{{ order.listing.price }}</td>
+            </tr>
+            {% if order.delivery_option.name == 'Delivery' and order.delivery_fee_instance %}
+                <tr id="delivery_fee_row">
+                    <td><strong>Delivery</strong></td>
+                    <td id="delivery_fee">£{{ order.delivery_fee_instance.delivery_fee }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td colspan="2">
+                    <hr>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Total</strong></td>
+                <td id="total_price">£{{ order.total_price }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}

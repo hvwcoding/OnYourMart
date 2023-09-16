@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <div class="container mt-4">
+        <h2>Login</h2>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="action" value="login">
+            {% bootstrap_form login_form %}
+            <div class="text-center">
+                {% bootstrap_button 'Login' button_type="submit" button_class="btn-primary" %}
+            </div>
+        </form>
+        <div class="text-center mt-4">
+            Don't have an account? <a href="{% url 'register' %}">Register</a>
+        </div>
+    </div>
+{% endblock %}

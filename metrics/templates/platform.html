@@ -1,0 +1,391 @@
+<div class="row p-3 justify-content-center">
+    <div id="listing-pie-chart" style="width: 300px;height:270px;"></div>
+    <div id="price-pie-chart" style="width: 300px;height:270px;"></div>
+    <div id="ratio-gauge-chart" style="width: 250px;height:250px;"></div>
+    <div id="order-pie-chart" style="width: 300px;height:270px;"></div>
+    <div id="weight-pie-chart" style="width: 300px;height:270px;"></div>
+</div>
+
+<script>
+
+    const listingPieChart = echarts.init(document.getElementById('listing-pie-chart'));
+    const orderPieChart = echarts.init(document.getElementById('order-pie-chart'));
+    const pricePieChart = echarts.init(document.getElementById('price-pie-chart'));
+    const weightPieChart = echarts.init(document.getElementById('weight-pie-chart'));
+    const ratioGaugeChart = echarts.init(document.getElementById('ratio-gauge-chart'));
+
+
+    const platformListingData = [
+        {value: {{ platform_data.platform_active_listing|default:"0" }}, name: 'Active'},
+        {value: {{ platform_data.platform_pending_listing|default:"0" }}, name: 'Pending'},
+        {value: {{ platform_data.platform_settled_listing|default:"0" }}, name: 'Settled'},
+        {
+            value: {{ platform_data.platform_total_listing|default:"0" }},
+            itemStyle: {
+                color: 'none',
+                decal: {
+                    symbol: 'none'
+                }
+            },
+            label: {
+                show: false
+            }
+        }
+    ];
+
+    let platformListingOption = {
+        title: {
+            text: 'Listing Overview',
+            left: 'center',
+            top: '5%'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '20%',
+            left: 'center',
+            selectedMode: false
+        },
+        series: [
+            {
+                name: 'Listing',
+                type: 'pie',
+                radius: ['10%', '20%'],
+                center: ['50%', '50%'],
+                startAngle: 180,
+                endAngle: 360,
+                label: {
+                    show: true,
+                    formatter(param) {
+                        return param.name + ' (' + param.percent * 2 + '%)';
+                    }
+                },
+                data: platformListingData
+            }
+        ]
+    };
+
+    if (platformListingData.every(data => data.value === 0)) {
+        platformListingOption = {
+            title: {
+                text: 'No Data Available',
+                left: 'center',
+                top: 'center'
+            }
+        };
+    }
+
+    const platformOrderData = [
+        {value: {{ platform_data.platform_delivery_order|default:"0" }}, name: 'Delivery'},
+        {value: {{ platform_data.platform_meetup_order|default:"0" }}, name: 'Meetup'},
+        {
+            value: {{ platform_data.platform_total_order|default:"0" }},
+            itemStyle: {
+                color: 'none',
+                decal: {
+                    symbol: 'none'
+                }
+            },
+            label: {
+                show: false
+            }
+        }
+    ];
+    const deliveryOrder = platformOrderData[0].value;
+    const meetupOrder = platformOrderData[1].value;
+    const reportedTotalOrder = platformOrderData[2].value;
+    const calculatedTotalOrder = deliveryOrder + meetupOrder;
+
+    console.log('Delivery Order:', deliveryOrder);
+    console.log('Meetup Order:', meetupOrder);
+    console.log('Reported Total Order:', reportedTotalOrder);
+    console.log('Calculated Total Order:', calculatedTotalOrder);
+
+    if (reportedTotalOrder !== calculatedTotalOrder) {
+        console.warn('Mismatch in total order count!');
+    }
+    let platformOrderOption = {
+        title: {
+            text: 'Order Overview',
+            left: 'center',
+            top: '5%'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '20%',
+            left: 'center',
+            selectedMode: false
+        },
+        series: [
+            {
+                name: 'Order',
+                type: 'pie',
+                radius: ['10%', '20%'],
+                center: ['50%', '50%'],
+                startAngle: 180,
+                endAngle: 360,
+                label: {
+                    show: true,
+                    formatter(param) {
+                        return param.name + ' (' + param.percent * 2 + '%)';
+                    }
+                },
+                data: platformOrderData
+            }
+        ]
+    };
+
+    if (platformOrderData.every(data => data.value === 0)) {
+        platformOrderOption = {
+            title: {
+                text: 'No Data Available',
+                left: 'center',
+                top: 'center'
+            }
+        };
+    }
+
+    const platformPriceData = [
+        {value: {{ platform_data.platform_active_price|default:"0" }}, name: 'Active £'},
+        {value: {{ platform_data.platform_pending_price|default:"0" }}, name: 'Pending £'},
+        {value: {{ platform_data.platform_settled_price|default:"0" }}, name: 'Settled £'},
+        {
+            value: {{ platform_data.platform_total_price|default:"0" }},
+            itemStyle: {
+                color: 'none',
+                decal: {
+                    symbol: 'none'
+                }
+            },
+            label: {
+                show: false
+            }
+        }
+    ];
+
+
+    let platformPriceOption = {
+        title: {
+            text: 'Price Overview',
+            left: 'center',
+            top: '5%'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '20%',
+            left: 'center',
+            selectedMode: false
+        },
+        series: [
+            {
+                name: 'Price',
+                type: 'pie',
+                radius: ['10%', '20%'],
+                center: ['50%', '50%'],
+                startAngle: 180,
+                endAngle: 360,
+                label: {
+                    show: true,
+                    formatter(param) {
+                        return param.name + ' (' + param.percent * 2 + '%)';
+                    }
+                },
+                data: platformPriceData
+            }
+        ]
+    };
+
+    if (platformPriceData.every(data => data.value === 0)) {
+        platformPriceOption = {
+            title: {
+                text: 'No Data Available',
+                left: 'center',
+                top: 'center'
+            }
+        };
+    }
+
+    const platformWeightData = [
+        {value: {{ platform_data.platform_delivery_weight|default:"0" }}, name: 'Delivery (kg)'},
+        {value: {{ platform_data.platform_meetup_weight|default:"0" }}, name: 'Meetup (kg)'},
+        {
+            value: {{ platform_data.platform_total_weight|default:"0" }},
+            itemStyle: {
+                color: 'none',
+                decal: {
+                    symbol: 'none'
+                }
+            },
+            label: {
+                show: false
+            }
+        }
+    ];
+
+    let platformWeightOption = {
+        title: {
+            text: 'Weight Overview',
+            left: 'center',
+            top: '5%'
+        },
+        tooltip: {
+            trigger: 'item',
+        },
+        legend: {
+            top: '20%',
+            left: 'center',
+            selectedMode: false
+        },
+        series: [
+            {
+                name: 'Weight',
+                type: 'pie',
+                radius: ['10%', '20%'],
+                center: ['50%', '50%'],
+                startAngle: 180,
+                endAngle: 360,
+                label: {
+                    show: true,
+                    formatter(param) {
+                        return param.name + ' (' + param.percent * 2 + '%)';
+                    }
+                },
+                data: platformWeightData
+            }
+        ]
+    };
+
+    if (platformWeightData.every(data => data.value === 0)) {
+        platformWeightOption = {
+            title: {
+                text: 'No Data Available',
+                left: 'center',
+                top: 'center'
+            }
+        };
+    }
+
+
+    const platformRatioOption = {
+        title: {
+            text: 'Contribution to the UK',
+            left: 'center',
+            top: '5%'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: function (param) {
+                const explanation = '<b>Figure Explanation:</b><br/>' +
+                    'This percentage is calculated from the total weight of orders placed on our platform. <br/>' +
+                    'It’s compared to a small fraction (0.01%) of the total waste produced in the UK in 2018.<br/><br/>';
+
+                const note = '<b>Please Note:</b><br/>' +
+                    'The numbers are rounded and may have minor differences due to computer calculations.<br/><br/>';
+
+                const timestamp = 'Last Updated: ' + (new Date()).toLocaleString();
+
+                return explanation + note + timestamp;
+            }
+        },
+        series: [
+            {
+                type: 'gauge',
+                radius: '70%',
+                startAngle: 180,
+                endAngle: 0,
+                min: 0,
+                max: 100,
+                splitNumber: 5,
+                itemStyle: {
+                    color: '#8ec270',
+                    shadowColor: 'rgba(0,138,255,0.45)',
+                    shadowBlur: 10,
+                    shadowOffsetX: 2,
+                    shadowOffsetY: 2
+                },
+                progress: {
+                    show: true,
+                    roundCap: true,
+                    width: 13
+                },
+                pointer: {
+                    icon: 'path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z',
+                    length: '60%',
+                    width: 12,
+                    offsetCenter: [0, '5%']
+                },
+                axisLine: {
+                    roundCap: true,
+                    lineStyle: {
+                        width: 15
+                    }
+                },
+                axisTick: {
+                    splitNumber: 2,
+                    lineStyle: {
+                        width: 2,
+                        color: '#999'
+                    }
+                },
+                splitLine: {
+                    length: 10,
+                    lineStyle: {
+                        width: 3,
+                        color: '#999'
+                    }
+                },
+                axisLabel: {
+                    distance: 20,
+                    color: '#999',
+                    fontSize: 12
+                },
+                title: {
+                    show: false
+                },
+                detail: {
+                    backgroundColor: '#fff',
+                    borderColor: '#999',
+                    borderWidth: 2,
+                    width: 'auto',
+                    lineHeight: 20,
+                    height: 20,
+                    borderRadius: 8,
+                    offsetCenter: [0, '50%'],
+                    valueAnimation: true,
+                    formatter: '{value|{value}}{unit|%}',
+                    rich: {
+                        value: {
+                            fontSize: 16,
+                            fontWeight: 'bolder',
+                            color: '#777'
+                        },
+                        unit: {
+                            fontSize: 12,
+                            color: '#999',
+                            padding: [-10, 0, -20, 10]
+                        }
+                    }
+                },
+                data: [
+                    {
+                        value: {{ platform_contribution_ratio|default:"0" }}
+                    }
+                ]
+            }
+        ]
+    };
+
+
+    listingPieChart.setOption(platformListingOption);
+    orderPieChart.setOption(platformOrderOption);
+    pricePieChart.setOption(platformPriceOption);
+    weightPieChart.setOption(platformWeightOption);
+    ratioGaugeChart.setOption(platformRatioOption);
+
+
+</script>
