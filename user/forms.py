@@ -2,13 +2,14 @@ from django import forms
 from django.contrib.auth import password_validation, authenticate
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from .models import CustomUser, University
-from django.utils import timezone
 
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(label='Email', widget=forms.EmailInput)
+    email = forms.EmailField(label='Email', widget=forms.EmailInput,
+                             help_text="Register with a university email is mandatory.", )
     university = forms.ModelChoiceField(
         queryset=University.objects.all().order_by('name'),
         required=True,
