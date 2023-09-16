@@ -100,7 +100,6 @@ class UserProfileForm(forms.ModelForm):
         self.fields['university'].disabled = True
 
     bio = forms.CharField(required=False, help_text='Max length: 300 characters')
-
     move_out_date = forms.DateField(
         required=True,
         widget=forms.DateInput(attrs={'type': 'date'}),
@@ -108,9 +107,9 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ['avatar', 'first_name', 'last_name',
-                  'bio', 'university', 'move_out_date']
+        fields = ['avatar', 'first_name', 'last_name', 'bio', 'university', 'move_out_date']
 
+    # Field validation: move-out date
     def clean_move_out_date(self):
         move_out_date = self.cleaned_data.get('move_out_date')
         if move_out_date and move_out_date < timezone.now().date():
@@ -119,7 +118,6 @@ class UserProfileForm(forms.ModelForm):
 
     def save(self, commit=True):
         if not self.is_valid():
-            # Don't save if the form is not valid
             return None
 
         user = super(UserProfileForm, self).save(commit=False)
@@ -136,7 +134,6 @@ class UserProfileForm(forms.ModelForm):
         if bio:
             user.bio = bio
         user.move_out_date = self.cleaned_data['move_out_date']
-
         if commit:
             user.save()
         return user

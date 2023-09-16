@@ -3,7 +3,6 @@ from functools import wraps
 from django.db.models.signals import post_save, post_delete
 
 from metrics.signals import listing_changes
-from user.models import City
 from .models import CustomUser, Listing, ListingType, Category, Condition, MeetupPoint, Status
 from .base import BaseTest
 
