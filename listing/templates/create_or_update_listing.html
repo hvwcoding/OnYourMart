@@ -20,7 +20,6 @@
                 {% endfor %}
             </div>
 
-
             {% bootstrap_field form.description %}
             {% bootstrap_field form.category %}
             {% bootstrap_field form.condition %}
@@ -117,7 +116,6 @@
                     meetupPointField.value = "";
                 }
             }
-
 
             priceField.addEventListener('blur', updatePriceFormat);
             meetupAvailableField.addEventListener('change', toggleMeetupPointField);
